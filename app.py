@@ -78,13 +78,24 @@ if uploaded_file:
 
 
 # --- LEGAL FOOTER ---
-
-st.write("") # This adds some breathing room
-st.write("") 
-
 st.markdown(
     """
-    <div style="text-align: center; color: grey; font-size: 0.8em; margin-top: 50px; padding-bottom: 20px;">
+    <style>
+    /* This targets the main container to allow absolute positioning inside it */
+    .main .block-container {
+        padding-bottom: 5rem;
+    }
+    .ultimate-footer {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: grey;
+        font-size: 0.8em;
+    }
+    </style>
+    <div class="ultimate-footer">
         © 2026 Astrielle AI | <b>Privacy & Terms</b><br>
         This app uses AI-generated data for monitoring purposes. 
         We do not collect or store personal user data.
