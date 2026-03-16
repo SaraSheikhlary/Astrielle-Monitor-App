@@ -7,21 +7,27 @@ from transformers import pipeline
 
 import streamlit as st
 
-# MUST BE AT THE VERY TOP, right after your imports
-st.set_page_config(layout="wide", page_title="Astrielle AI", page_icon="🌌")
+# 1. This must be the first Streamlit command
+st.set_page_config(layout="wide")
 
-# --- THE TRANSPARENCY MAGIC ---
-# Add these lines to make your main app background and sidebar transparent
-st.markdown(
-    """
+# 2. This CSS forces the app to be see-through
+st.markdown("""
     <style>
-        .stApp, .stSidebar {
-            background-color: transparent !important;
+        /* This makes the main background transparent */
+        .stApp {
+            background: rgba(0,0,0,0) !important;
+        }
+        /* This makes the sidebar transparent */
+        section[data-testid="stSidebar"] {
+            background-color: rgba(0,0,0,0.3) !important;
+            backdrop-filter: blur(10px);
+        }
+        /* This makes your text white so you can read it on the dark stars */
+        h1, h2, h3, p, span, label {
+            color: white !important;
         }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # --- 1. Load the Voice AI (The part that works!) ---
 @st.cache_resource
