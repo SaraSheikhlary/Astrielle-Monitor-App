@@ -94,6 +94,29 @@ if audio_value:
         mime="audio/wav"
     )
 
+#Analyis of the recorded voice
+import streamlit as st
+
+st.title("Astrielle AI Voice Monitor")
+
+# 1. The Microphone Widget
+# This creates the recording interface on your .com site
+recorded_voice = st.audio_input("Record your voice for AI analysis")
+
+# 2. The Automatic Trigger
+if recorded_voice:
+    st.success("Voice captured!")
+    
+    # This is where the magic happens
+    with st.spinner("Astrielle is analyzing your voice patterns..."):
+        
+        # IMPORTANT: Replace 'process_audio' with the actual name 
+        # of your analysis function in your code
+        analysis_results = process_audio(recorded_voice)
+        
+        # 3. Display the results
+        st.subheader("Analysis Results")
+        st.write(analysis_results)
 
     # --- LEGAL FOOTER ---
     # --- LOCKED BOTTOM FOOTER ---
