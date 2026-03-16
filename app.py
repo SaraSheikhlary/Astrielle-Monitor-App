@@ -16,6 +16,9 @@ classifier = load_voice_model()
 
 # --- 2. Website Setup ---
 st.markdown("<h1 style='text-align: center;'>✨ Astrielle AI: State Monitor ✨</h1>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center;'> Welcome to your professional analysis dashboard </h2>", unsafe_allow_html=True)
+
+
 st.divider()
 
 st.sidebar.header("✨ Fusion Weights")
