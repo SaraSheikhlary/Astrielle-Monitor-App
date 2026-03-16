@@ -37,29 +37,6 @@ if uploaded_file:
         if r['label'] == 'ang':
             v_score = r['score']
 
-#Voice Record
-import streamlit as st
-
-# 1. SETUP (Always at the top)
-st.set_page_config(page_title="Astrielle AI", layout="centered")
-
-# 2. TITLE & HEADER
-st.title("Astrielle AI: State Monitor")
-st.write("Welcome to your professional analysis dashboard.")
-
-# 3. THE MICROPHONE (This is where the code goes!)
-st.subheader("🎤 Voice Input")
-audio_input = st.audio_input("Record a test clip")
-
-if audio_input:
-    st.audio(audio_input)
-    st.download_button(
-        label="📥 Download Recording",
-        data=audio_input,
-        file_name="recording.wav",
-        mime="audio/wav"
-    )
-
     # --- 4. FUSION LAYER ---
     # Since Face AI is stuck, we simulate a "Face Vector"
     # to show us how the Fusion logic handles conflicting data
@@ -99,7 +76,28 @@ if audio_input:
         elif diff < -0.1:
             st.info("📉 Trend: You are calming down. Great job!")
 
+#Voice Record
+import streamlit as st
 
+# 1. SETUP (Always at the top)
+st.set_page_config(page_title="Astrielle AI", layout="centered")
+
+# 2. TITLE & HEADER
+st.title("Astrielle AI: State Monitor")
+st.write("Welcome to your professional analysis dashboard.")
+
+# 3. THE MICROPHONE (This is where the code goes!)
+st.subheader("🎤 Voice Input")
+audio_input = st.audio_input("Record a test clip")
+
+if audio_input:
+    st.audio(audio_input)
+    st.download_button(
+        label="📥 Download Recording",
+        data=audio_input,
+        file_name="recording.wav",
+        mime="audio/wav"
+    )
 
 # --- LEGAL FOOTER ---
 # --- LOCKED BOTTOM FOOTER ---
