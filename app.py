@@ -77,20 +77,19 @@ if uploaded_file:
             st.info("📉 Trend: You are calming down. Great job!")
 
 
-    # THE MICROPHONE (This is where the code goes!)
-    st.subheader("🎤 Voice Input")
-    audio_input = st.audio_input("Record a test clip")
+   # --- MICROPHONE SECTION ---
+st.subheader("🎤 Live Voice Input")
+audio_value = st.audio_input("Record your voice to analyze")
 
-    if audio_input:
-        st.audio(audio_input)
-        st.download_button(
-            label="📥 Download Recording",
-            data=audio_input,
-            file_name="recording.wav",
-            mime="audio/wav"
-        )
-
-
+if audio_value:
+    st.audio(audio_value)
+    # The button will only appear AFTER they record something
+    st.download_button(
+        label="📥 Download Recording",
+        data=audio_value,
+        file_name="my_recording.wav",
+        mime="audio/wav"
+    )
 
 
     # --- LEGAL FOOTER ---
