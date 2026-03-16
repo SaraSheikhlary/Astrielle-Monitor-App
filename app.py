@@ -85,24 +85,37 @@ recorded_voice = st.audio_input("Record your voice for AI analysis")
 
 if recorded_voice:
     with st.spinner("Astrielle AI is analyzing your live voice..."):
-        # 1. Load the recorded voice just like you do on line 33
         import librosa
         speech, sr = librosa.load(recorded_voice, sr=16000)
-        
-        # 2. Use your 'classifier' (matching line 34)
         result = classifier(speech)
         
-        # 3. Calculate the stress score (matching lines 38-41)
+        # 1. Create the "Translator" for the codes
+        label_map = {
+            'ang': '🔥 High Stress (Angry)',
+            'hap': '😊 Happy / Positive',
+            'sad': '😢 Sad / Low Energy',
+            'neu': '😐 Neutral / Calm',
+            'fea': '😨 Fearful / Anxious'
+        }
+        
+        # 2. Process and Show Results in plain English
+        st.subheader("Voice Analysis Results:")
+        
         v_score = 0.0
         for r in result:
+            # Get the human-friendly name
+            clean_name = label_map.get(r['label'], r['label']) 
+            score_percent = r['score'] * 100
+            
+            # Show a nice progress bar for each emotion
+            st.write(f"**{clean_name}**")
+            st.progress(r['score'])
+            
+            # Update the stress score for your Fusion Weights
             if r['label'] == 'ang':
                 v_score = r['score']
-        
-        # 4. Show the results
-        st.success(f"Analysis Complete! Voice Stress Score: {v_score:.2f}")
-        st.write(result)
 
-
+        st.success(f"Final Voice Stress Score: {v_score:.2f}")
 
     # --- LEGAL FOOTER ---
     # --- LOCKED BOTTOM FOOTER ---
