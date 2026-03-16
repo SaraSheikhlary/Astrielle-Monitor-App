@@ -14,8 +14,15 @@ def load_voice_model():
 
 classifier = load_voice_model()
 
-# --- 2. Website Setup ---
-st.markdown("<h1 style='text-align: center;'>✨ Astrielle AI: State Monitor ✨</h1>", unsafe_allow_html=True)
+# 1. Website Setup and  Config (Keep this at the very top)
+import streamlit as st
+st.set_page_config(page_title="Astrielle AI", layout="wide")
+
+# 2. The Main Header (The one you want to keep)
+st.markdown("<h1 style='text-align: center;'>✨ Astrielle AI: State Monitor ✨</h1>", unsafe_content_html=True)
+st.markdown("<p style='text-align: center;'>Welcome to your professional analysis dashboard.</p>", unsafe_content_html=True)
+
+
 st.divider()
 
 st.sidebar.header("✨ Fusion Weights")
