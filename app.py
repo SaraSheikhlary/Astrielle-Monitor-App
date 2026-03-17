@@ -4,38 +4,66 @@ import pandas as pd
 import numpy as np
 from transformers import pipeline
 
-# --- 1. CONFIGURATION ---
-st.set_page_config(layout="wide", page_title="Astrielle AI | Mission Control")
+# 1. SETUP
+st.set_page_config(page_title="Astrielle AI")
 
-if 'authenticated' not in st.session_state:
-    st.session_state.authenticated = False
+if 'auth' not in st.session_state:
+    st.session_state.auth = False
 
-# --- 2. LOGIN PAGE ---
-if not st.session_state.authenticated:
-    # Single-line CSS to prevent "unterminated string" errors
-    style = '<style>.stApp { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000"); background-size: cover; display: flex; align-items: center; justify-content: center; } .auth-card { text-align: center; color: white; padding: 40px; background: rgba(0, 0, 0, 0.6); border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }</style>'
-    st.markdown(style, unsafe_allow_html=True)
+# 2. LOGIN PAGE
+if st.session_state.auth == False:
+    st.title("🛰️ ASTRIELLE AI")
+    st.subheader("Mission Control Login")
+    
+    user = st.text_input("Astronaut ID")
+    pw = st.text_input("Access Key", type="password")
+    
+    if st.button("LOGIN"):
+        st.session_state.auth = True
+        st.rerun()
+    st.stop()
 
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        st.markdown('<div class="auth-card"><h1>🛰️ ASTRIELLE AI</h1><p>Autonomous Mission Intelligence</p></div>', unsafe_allow_html=True)
-        user = st.text_input("Astronaut ID")
-        pw = st.text_input("Access Key", type="password")
-        if st.button("INITIALIZE UPLINK", use_container_width=True):
-            st.session_state.authenticated = True
-            st.rerun()
-    st.stop() 
-
-# --- 3. MAIN DASHBOARD ---
+# 3. DASHBOARD (Runs after Login)
 else:
-    with st.sidebar:
-        st.title("👨‍🚀 Command")
-        if st.button("TERMINATE SESSION"):
-            st.session_state.authenticated = False
-            st.rerun()
-        st.divider()
-        st.info("System Status: Nominal")
-        st.write("Latency: 0.004ms")
+    st.sidebar.title("👨‍🚀 Astro_01")
+    if st.sidebar.button("LOGOUT"):
+        st.session_state.auth = False
+        st.rerun()
 
-    # Muted Dashboard Theme
-    dash_style = '<style>.stApp { background: #0e1117; } .stTabs [data-baseweb="tab-panel"] { background: rgba(255, 255,
+    # THE 4 TABS
+    t1, t2, t3, t4 = st.tabs(["🎙️ Vocal", "🛰️ Structural", "🧠 Synergy", "📑 Summary"])
+
+    with t1:
+        st.header("Vocal Biomarkers")
+        @st.cache_resource
+        def load_model():
+            return pipeline("audio-classification", model="superb/wav2vec2-base-superb-er")
+        
+        try:
+            model = load_model()
+            up = st.file_uploader("Upload .wav", type="wav")
+            if up:
+                s, r = librosa.load(up, sr=16000)
+                for res in model(s):
+                    st.write(res['label'])
+                    st.progress(res['score'])
+        except:
+            st.info("Loading AI...")
+
+    with t2:
+        st.header("Structural Health")
+        val = st.slider("Hull Strain", 0, 10000, 4000)
+        st.metric("Damage Risk", f"{val/100}%")
+        st.line_chart(np.random.randn(20, 1))
+
+    with t3:
+        st.header("HSI Synergy")
+        st.write("Mars Delay: 22 Minutes")
+        st.write("Astrielle Latency: 0.004ms")
+        st.bar_chart({"Earth": 1320, "Astrielle": 0.01})
+
+    with t4:
+        st.header("📑 Mission Summary")
+        st.subheader("Predictive Analytics")
+        st.write("Logic: Linear Elastic Fracture Mechanics.")
+        st.write("Goal: Predict failure
