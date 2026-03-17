@@ -7,37 +7,28 @@ from transformers import pipeline
 # --- 1. CONFIGURATION ---
 st.set_page_config(layout="wide", page_title="Astrielle AI | HSI")
 
-# --- 2. SESSION STATE ---
 if 'entered' not in st.session_state:
     st.session_state.entered = False
 
-# --- 3. THE SPLASH SCREEN ---
+# --- 2. THE SPLASH SCREEN ---
 if not st.session_state.entered:
     st.markdown("""
         <style>
             .stApp {
                 background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                             url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
-                background-size: cover;
-                display: flex; align-items: center; justify-content: center;
+                background-size: cover; display: flex; align-items: center; justify-content: center;
             }
             .landing-card {
                 text-align: center; color: white; padding: 60px;
-                background: rgba(255, 255, 255, 0.05); 
-                border-radius: 30px;
-                backdrop-filter: blur(15px); 
-                border: 1px solid rgba(255,255,255,0.1);
+                background: rgba(255, 255, 255, 0.05); border-radius: 30px;
+                backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1);
             }
-            .title-text { font-size: 85px; font-weight: 800; letter-spacing: 12px; margin-bottom: 0px; }
-            .subtitle-text { font-size: 22px; color: #00f2ff; letter-spacing: 3px; margin-bottom: 30px; }
+            .title-text { font-size: 85px; font-weight: 800; letter-spacing: 12px; }
         </style>
         <div class="landing-card">
             <div class="title-text">ASTRIELLE</div>
-            <div class="subtitle-text">Autonomous Edge Intelligence</div>
-            <p style="max-width:600px; margin:0 auto; font-size:18px; opacity:0.8;">
-                Advanced <b>Human-Systems Integration</b> for Deep Space. 
-                Localized AI diagnostics to bypass the 20-minute Mars-Earth communication lag.
-            </p>
+            <p>Advanced Human-Systems Integration for Deep Space</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -46,83 +37,87 @@ if not st.session_state.entered:
         st.rerun()
     st.stop() 
 
-# --- 4. THE MAIN DASHBOARD ---
+# --- 3. THE MAIN DASHBOARD ---
 else:
     with st.sidebar:
         st.title("🛰️ Command Center")
-        if st.button("Log Out / Reset View"):
+        if st.button("Log Out / Reset"):
             st.session_state.entered = False
             st.rerun()
         st.divider()
-        st.write("**System Status:** Active")
         st.write("**Local Latency:** 0.004ms")
 
-    # THEME GUARD CSS
+    # THEME & BACKGROUND
     st.markdown("""
         <style>
             .stApp {
-                background: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
+                background: linear-gradient(rgba(14, 17, 23, 0.85), rgba(14, 17, 23, 0.85)), 
+                            url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
                 background-size: cover; background-attachment: fixed;
-            }
-            [data-theme="dark"] .stApp {
-                background-image: linear-gradient(rgba(14, 17, 23, 0.85), rgba(14, 17, 23, 0.85)), 
-                                  url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
             }
             .stTabs [data-baseweb="tab-panel"] {
                 padding: 30px; border-radius: 20px; backdrop-filter: blur(20px);
-                border: 1px solid rgba(128, 128, 128, 0.2); margin-top: 20px;
+                background: rgba(30, 30, 30, 0.75); border: 1px solid rgba(128, 128, 128, 0.2);
             }
         </style>
     """, unsafe_allow_html=True)
 
-    # 4 TABS: Added Summary Tab
-    t1, t2, t3, t4 = st.tabs(["🎙️ Vocal AI", "🛰️ Structural", "🧠 HSI Synergy", "📑 Summary"])
+    tab1, tab2, tab3, tab4 = st.tabs(["🎙️ Vocal AI", "🛰️ Structural", "🧠 HSI Synergy", "📑 Summary"])
 
-    with t1:
+    with tab1:
         st.title("✨ Vocal Biomarker Monitor")
+        
         @st.cache_resource
         def load_voice_model():
             return pipeline("audio-classification", model="superb/wav2vec2-base-superb-er")
         
         classifier = load_voice_model()
-        emo_icons = {"angry": "😡", "sad": "😢", "happy": "😊", "neutral": "😐", "fear": "😨"}
+        emo_icons = {"angry": "😡", "sad": "😢", "happy": "😊", "neutral": "😐", "fear": "😨", "surprise": "😲"}
 
-        rec = st.audio_input("Record Crew Audio")
-        if rec:
-            speech, sr = librosa.load(rec, sr=16000)
-            res = classifier(speech)
-            top = res[0]['label']
+        # Logic for both Upload and Record
+        source = st.file_uploader("Upload Telemetry (.wav)", type="wav")
+        rec = st.audio_input("Or Live Stream Audio")
+        
+        active_file = source if source is not None else rec
+
+        if active_file:
+            speech, sr = librosa.load(active_file, sr=16000)
+            results = classifier(speech)
             
-            # AI FEEDBACK WITH EMOJIS
-            st.subheader(f"Crew State: {top.upper()} {emo_icons.get(top, '🛰️')}")
+            # Show the top result with an Emoji
+            top_emo = results[0]['label']
+            st.subheader(f"AI Detected: {top_emo.upper()} {emo_icons.get(top_emo, '🛰️')}")
             
-            if top in ["angry", "fear"]:
-                st.error("🚨 AI ALERT: Stress detected. Initiating calming protocols.")
-            elif top == "happy":
-                st.success("✅ AI FEEDBACK: High morale detected. Mission efficiency +15%.")
+            # AI Feedback block
+            if top_emo in ["angry", "fear"]:
+                st.error("⚠️ AI ALERT: Stress detected. Suggest immediate rest cycle.")
+            elif top_emo == "happy":
+                st.success("✅ AI STATUS: Optimal crew morale detected.")
             else:
-                st.info("📡 AI FEEDBACK: Nominal levels. Continue mission.")
+                st.info("📡 AI STATUS: Crew biomarkers nominal.")
 
-            for r in res:
-                st.write(f"**{r['label']}**")
+            # Show details
+            for r in results:
+                st.write(f"**{r['label'].upper()}** {emo_icons.get(r['label'], '')}")
                 st.progress(r['score'])
 
-    with t2:
-        st.title("🛰️ Structural Health")
-        strn = st.slider("Hull Strain", 0, 10000, 4200)
+    with tab2:
+        st.title("🛰️ Structural Health Monitoring")
+        strn = st.slider("Hull Strain (με)", 0, 10000, 4000)
         st.metric("Deformation Risk", f"{strn/100}%", delta="Predictive")
         st.line_chart(np.random.randn(20, 1))
 
-    with t3:
+    with tab3:
         st.title("🧠 Human-Systems Integration")
+        st.info("Direct Edge Feedback: Active. Mars-Earth Delay: 22m (Bypassed)")
         st.bar_chart({"Earth Delay (s)": 1320, "Astrielle AI (s)": 0.004})
 
-    with t4:
+    with tab4:
         st.title("📑 Mission Summary")
-        st.subheader("Objective")
-        st.write("Astrielle AI solves the 22-minute Mars communication delay by providing real-time local diagnostics.")
-        st.subheader("Safety Metrics")
-        st.info("Current Safety Index: 98.4%")
-        st.write("Using ROC-AUC (0.98) logic to predict hull fractures before they appear.")
+        st.subheader("What is Astrielle AI?")
+        st.write("Astrielle is an **Autonomous Edge Intelligence** system. It processes data on the ship to bypass the 20-minute communication lag between Mars and Earth.")
+        st.subheader("Safety Analytics")
+        st.write("Current Safety Index: **98.4%**")
+        st.write("The system uses structural telemetry and crew vocal biomarkers to predict mission risks before they become emergencies.")
 
     st.markdown('<div style="text-align:center; padding:10px; opacity:0.5;">© 2026 Astrielle AI</div>', unsafe_allow_html=True)
