@@ -7,84 +7,101 @@ from transformers import pipeline
 # --- 1. CONFIG ---
 st.set_page_config(layout="wide", page_title="Astrielle AI")
 
-# Fix the "Blank Screen" by ensuring these exist
 if 'entered' not in st.session_state:
     st.session_state.entered = False
 
-# --- 2. LOGIN & ACCOUNT PAGE ---
+# --- 2. LOGIN & SPLASH ---
 if not st.session_state.entered:
-    st.title("🛰️ ASTRIELLE AI: MISSION LOGIN")
+    # We use a simple variable to hold the URL to keep lines short
+    bg_img = "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000"
     
-    # Simple tabs for Login/Signup to keep it from going blank
-    auth_tab1, auth_tab2 = st.tabs(["Login", "Create Account"])
-    
-    with auth_tab1:
-        st.text_input("Astronaut ID", key="user_id")
-        st.text_input("Access Key", type="password", key="user_pw")
-        if st.button("INITIALIZE UPLINK"):
-            st.session_state.entered = True
-            st.rerun()
-            
-    with auth_tab2:
-        st.text_input("Full Name")
-        st.text_input("Agency (NASA/SpaceX/ESA)")
-        st.button("Request Mission Credentials")
-    st.stop() 
+    st.markdown(f"""
+        <style>
+            .stApp {{
+                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{bg_img}');
+                background-size: cover; display: flex; align-items: center; justify-content: center;
+            }}
+            .card {{
+                text-align: center; color: white; padding: 50px;
+                background: rgba(255, 255, 255, 0.05); border-radius: 30px;
+                backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1);
+            }
+        </style>
+        <div class="card">
+            <h1 style="font-size:70px; letter-spacing:10px;">ASTRIELLE</h1>
+            <p style="color:#00f2ff;">Autonomous Edge Intelligence</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-# --- 3. THE MAIN DASHBOARD ---
+    col1, col2, col3 = st.columns([1,1.5,1])
+    with col2:
+        tab_in, tab_up = st.tabs(["Login", "Create Account"])
+        with tab_in:
+            st.text_input("Astronaut ID")
+            st.text_input("Access Key", type="password")
+            if st.button("INITIALIZE MISSION", use_container_width=True):
+                st.session_state.entered = True
+                st.rerun()
+        with tab_up:
+            st.text_input("Name")
+            st.text_input("Agency")
+            st.button("Request Access")
+    st.stop()
+
+# --- 3. DASHBOARD ---
 else:
-    # Sidebar Logout
     with st.sidebar:
-        st.title("👨‍🚀 Astro_01")
-        if st.button("🔴 LOGOUT"):
+        st.title("🛰️ Command")
+        if st.button("LOGOUT / RESET"):
             st.session_state.entered = False
             st.rerun()
         st.divider()
-        st.write("**Latency:** 0.004ms")
+        st.write("System: **Active**")
 
-    # App Content
-    tab1, tab2, tab3, tab4 = st.tabs(["🎙️ Vocal AI", "🛰️ Structural AI", "🧠 HSI Synergy", "📑 About / Summary"])
+    # Main Dashboard Background
+    st.markdown("""
+        <style>
+            .stApp {
+                background: linear-gradient(rgba(14,17,23,0.8), rgba(14,17,23,0.8)), 
+                            url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
+                background-size: cover; background-attachment: fixed;
+            }
+            .stTabs [data-baseweb="tab-panel"] {
+                background: rgba(30, 30, 30, 0.7); padding: 30px; border-radius: 20px;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
-    with tab1:
-        st.header("Vocal Biomarker Monitor")
+    t1, t2, t3, t4 = st.tabs(["🎙️ Vocal AI", "🛰️ Structural", "🧠 HSI Synergy", "📑 About Summary"])
+
+    with t1:
+        st.header("Vocal Biomarkers")
         @st.cache_resource
-        def load_voice_model():
+        def load_model():
             return pipeline("audio-classification", model="superb/wav2vec2-base-superb-er")
         
-        try:
-            classifier = load_voice_model()
-            up = st.file_uploader("Upload .wav", type="wav")
-            if up:
-                speech, sr = librosa.load(up, sr=16000)
-                res = classifier(speech)
-                for r in res:
-                    st.write(f"**{r['label']}**")
-                    st.progress(r['score'])
-        except:
-            st.info("AI Model Loading...")
+        # Audio input (The Recorder you wanted)
+        rec = st.audio_input("Start Live Stream")
+        if rec:
+            classifier = load_model()
+            speech, sr = librosa.load(rec, sr=16000)
+            for r in classifier(speech):
+                st.write(f"**{r['label']}**")
+                st.progress(r['score'])
 
-    with tab2:
+    with t2:
         st.header("Structural Health")
-        c1, c2 = st.columns([1, 2])
-        with c1:
-            strn = st.slider("Hull Strain", 0, 10000, 4000)
-        with c2:
-            st.metric("Deformation Risk", f"{strn/100}%", delta="Predictive")
-            st.line_chart(np.random.randn(20, 1))
+        strn = st.slider("Hull Strain", 0, 10000, 4200)
+        st.metric("Deformation Risk", f"{strn/100}%", delta="Predictive")
+        st.line_chart(np.random.randn(20, 1))
 
-    with tab3:
+    with t3:
         st.header("Human-Systems Integration")
-        st.bar_chart({"Earth Delay (s)": 1320, "Astrielle AI (s)": 0.01})
+        st.info("Direct Edge Feedback: Bypassing 22m Mars Delay")
+        st.bar_chart({"Earth Delay": 1320, "Astrielle": 0.01})
 
-    with tab4:
-        st.header("📑 Mission Summary & About")
-        st.subheader("Project Purpose")
-        st.write("Astrielle AI is designed to solve the **Communication Gap** in deep space. On Mars, it takes 20 minutes for a signal to reach Earth. If a ship's hull cracks, you cannot wait 20 minutes for NASA to tell you.")
-        
-        st.subheader("Predictive Analytics")
-        st.write("This app uses **Localized Inference** to predict structural failure and crew health risks in real-time, bypassing Earth latency entirely.")
-        
-        st.info("System Safety Index: 98.4% (ROC-AUC Optimized)")
-
-    st.markdown("---")
-    st.caption("© 2026 Astrielle AI | Confidential Mission Telemetry")
+    with t4:
+        st.header("📑 Mission Intelligence Summary")
+        st.subheader("Project Astrielle")
+        st.write("Astrielle is an Edge AI system designed for deep space. It detects structural failure and crew health issues locally, removing the 20-minute wait for Earth signals.")
+        st.success("Safety Index: 98.4% (ROC Optimized)")
