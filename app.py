@@ -1,8 +1,6 @@
 import streamlit as st
-import librosa
 import pandas as pd
 import numpy as np
-from transformers import pipeline
 
 # --- 1. CONFIGURATION ---
 st.set_page_config(layout="wide", page_title="Astrielle AI | HSI")
@@ -49,13 +47,4 @@ if not st.session_state.entered:
 # --- 4. THE MAIN DASHBOARD ---
 else:
     with st.sidebar:
-        st.title("🛰️ Command Center")
-        if st.button("Log Out / Reset View"):
-            st.session_state.entered = False
-            st.rerun()
-        st.divider()
-        st.write("**System:** Edge Computing")
-        st.write("**Local Latency:** 0.004ms")
-        st.write("**Earth Sync:** 22m Delay (Bypassed)")
-
-    # THE
+        st
