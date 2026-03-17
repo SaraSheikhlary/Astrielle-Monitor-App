@@ -41,7 +41,7 @@ if not st.session_state.entered:
             .subtitle-text { font-size: 22px; color: #00f2ff; letter-spacing: 3px; margin-bottom: 30px; }
         </style>
         <div class="landing-card">
-            <div class="title-text">Astrielle AI</div>
+            <div class="title-text">ASTRIELLE AI</div>
             <div class="subtitle-text">Autonomous Edge Intelligence</div>
             <p style="max-width:600px; margin:0 auto; font-size:18px; opacity:0.8;">
                 Advanced <b>Human-Systems Integration</b> for Deep Space. 
