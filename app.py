@@ -4,14 +4,14 @@ import pandas as pd
 import numpy as np
 from transformers import pipeline
 
-# --- 1. CONFIG ---
-st.set_page_config(layout="wide", page_title="Astrielle AI | Space Biotech")
+# --- 1. CONFIGURATION ---
+st.set_page_config(layout="wide", page_title="Astrielle AI | HSI")
 
-# --- 2. SESSION STATE ---
+# --- 2. SESSION STATE (The Memory) ---
 if 'entered' not in st.session_state:
     st.session_state.entered = False
 
-# --- 3. THE SPLASH SCREEN ---
+# --- 3. THE SPLASH SCREEN (Landing Page) ---
 if not st.session_state.entered:
     st.markdown("""
         <style>
@@ -46,7 +46,7 @@ if not st.session_state.entered:
         st.rerun()
     st.stop() 
 
-# --- 4. THE MAIN DASHBOARD ---
+# --- 4. THE MAIN DASHBOARD (Visible only after 'Enter') ---
 else:
     # Sidebar for Reset & Edge Info
     with st.sidebar:
@@ -56,53 +56,39 @@ else:
             st.rerun()
         st.divider()
         st.write("**System:** Edge Computing")
-        st.write("**Latency:** 0.004ms (Local)")
+        st.write("**Local Latency:** 0.004ms")
         st.write("**Earth Sync:** 22m Delay (Bypassed)")
 
-    # Main CSS for Dashboard & Footer    
+    # ADAPTIVE CSS (Switching White/Black based on Theme)
     st.markdown("""
         <style>
-            /* 1. This uses the system's own text color variable */
+            /* This forces the app to use the system text color (White in Dark, Black in Light) */
             .stApp {
                 color: var(--text-color);
-                background: linear-gradient(rgba(14, 17, 23, 0.8), rgba(14, 17, 23, 0.8)), 
+                background: linear-gradient(rgba(14, 17, 23, 0.85), rgba(14, 17, 23, 0.85)), 
                             url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
                 background-size: cover;
             }
-
-            /* 2. Forces headings to be crisp in both modes */
-            h1, h2, h3, p {
-                color: var(--text-color) !important;
-            }
-
-            /* 3. Glass-morphism for Tab Content (Makes it readable) */
+            
+            /* Glass-morphism for Tab Content readability */
             .stTabs [data-baseweb="tab-panel"] {
                 background: rgba(255, 255, 255, 0.05);
-                padding: 20px;
+                padding: 25px;
                 border-radius: 15px;
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 15px;
             }
 
-            /* 4. The Footer Styling */
+            h1, h2, h3, p, span {
+                color: var(--text-color) !important;
+            }
+
             .footer {
                 position: fixed; left: 0; bottom: 0; width: 100%;
                 background-color: rgba(0, 0, 0, 0.8); 
                 color: #aaa; text-align: center;
-                font-size: 0.8em; padding: 10px 0; z-index: 999;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-            .stApp {
-                background: linear-gradient(rgba(14, 17, 23, 0.9), rgba(14, 17, 23, 0.9)), 
-                            url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
-                background-size: cover;
-            }
-            .footer {
-                position: fixed; left: 0; bottom: 0; width: 100%;
-                background-color: rgba(14, 17, 23, 0.95); 
-                color: #888; text-align: center;
-                font-size: 0.8em; padding: 15px 0; z-index: 999;
+                font-size: 0.8em; padding: 12px 0; z-index: 999;
                 border-top: 1px solid rgba(255,255,255,0.1);
             }
         </style>
@@ -110,6 +96,7 @@ else:
 
     tab1, tab2, tab3 = st.tabs(["🎙️ Vocal Biomarkers", "🛰️ Structural Health", "🧠 Human-Systems Integration"])
 
+    # --- TAB 1: VOCAL AI ---
     with tab1:
         st.title("✨ Vocal Biomarker Monitor")
         @st.cache_resource
@@ -135,31 +122,39 @@ else:
                 st.write(f"**{r['label']}**")
                 st.progress(r['score'])
 
+    # --- TAB 2: STRUCTURAL AI ---
     with tab2:
         st.title("🛰️ Structural Health Monitoring")
         col1, col2 = st.columns([1, 2])
         with col1:
-            st.write("### Sensor Inputs")
+            st.write("### Sensor Telemetry")
             vibration = st.slider("Vibration (Hz)", 0, 5000, 1100)
             strain = st.slider("Strain (με)", 0, 10000, 4000)
+            cycles = st.number_input("Stress Cycles", 1000, 1000000, 50000)
         with col2:
-            damage = (strain / 10000) * 100
+            damage = (strain / 10000) * (np.log10(cycles) / 6) * 100
             st.metric("Deformation Risk", f"{damage:.1f}%")
-            st.line_chart(np.random.randn(20, 1))
+            st.line_chart(pd.DataFrame(np.random.randn(20, 1), columns=["Stress Level"]))
 
+    # --- TAB 3: HSI (THE DELAY SOLUTION) ---
     with tab3:
-        st.title("🧠 Human-Systems Integration (HSI)")
-        st.subheader("Autonomous Synergy Guardian")
+        st.title("🧠 Human-Systems Integration")
         st.info("Direct Edge Feedback: Active. Mars-Earth Delay: 22m (Bypassed)")
-        st.write("This module correlates biological stress with mechanical fatigue to predict mission-critical failures before they reach Earth.")
         
-        # A quick visual for the 'Real-Time' proof
+        c_a, c_b = st.columns(2)
+        with c_a:
+            st.metric("Earth Comms Latency", "1.3M ms", "Mars-Max")
+        with c_b:
+            st.metric("Astrielle AI Latency", "0.004 ms", "Local-Edge", delta_color="inverse")
+            
+        st.write("### Synergy Guardian")
+        st.write("This module cross-references biological vocal stress with mechanical deformation to ensure autonomous crew safety during deep space transit.")
         st.bar_chart({"Earth Delay (s)": 1320, "Astrielle AI (s)": 0.004})
 
     # --- THE FOOTER ---
     st.markdown("""
         <div class="footer">
-            © 2026 Astrielle AI | Developed by [Your Name/PhD Bio] | <b>Confidential Mission Telemetry</b><br>
+            © 2026 Astrielle AI | <b>Confidential Mission Telemetry</b> | 
             Powered by Edge Intelligence for Autonomous Deep Space Exploration.
         </div>
     """, unsafe_allow_html=True)
