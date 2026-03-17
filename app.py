@@ -1,69 +1,61 @@
 import streamlit as st
 import librosa
-import pandas as pd
 import numpy as np
 from transformers import pipeline
 
-# 1. SETUP
-st.set_page_config(page_title="Astrielle AI")
-
+# 1. AUTH
 if 'auth' not in st.session_state:
     st.session_state.auth = False
 
-# 2. LOGIN PAGE
+# 2. LOGIN
 if st.session_state.auth == False:
-    st.title("🛰️ ASTRIELLE AI")
-    st.subheader("Mission Control Login")
-    
-    user = st.text_input("Astronaut ID")
-    pw = st.text_input("Access Key", type="password")
-    
-    if st.button("LOGIN"):
+    st.title("ASTRIELLE AI")
+    u = st.text_input("ID")
+    p = st.text_input("KEY", type="password")
+    if st.button("GO"):
         st.session_state.auth = True
         st.rerun()
     st.stop()
 
-# 3. DASHBOARD (Runs after Login)
+# 3. APP
 else:
-    st.sidebar.title("👨‍🚀 Astro_01")
-    if st.sidebar.button("LOGOUT"):
+    st.sidebar.title("MENU")
+    if st.sidebar.button("EXIT"):
         st.session_state.auth = False
         st.rerun()
 
-    # THE 4 TABS
-    t1, t2, t3, t4 = st.tabs(["🎙️ Vocal", "🛰️ Structural", "🧠 Synergy", "📑 Summary"])
+    # TABS
+    t1, t2, t3, t4 = st.tabs(["VOICE", "SHIP", "DELAY", "DATA"])
 
     with t1:
-        st.header("Vocal Biomarkers")
+        st.write("AI VOICE")
         @st.cache_resource
-        def load_model():
+        def load():
             return pipeline("audio-classification", model="superb/wav2vec2-base-superb-er")
-        
         try:
-            model = load_model()
-            up = st.file_uploader("Upload .wav", type="wav")
-            if up:
-                s, r = librosa.load(up, sr=16000)
-                for res in model(s):
-                    st.write(res['label'])
-                    st.progress(res['score'])
+            m = load()
+            f = st.file_uploader("WAV", type="wav")
+            if f:
+                s, r = librosa.load(f, sr=16000)
+                for o in m(s):
+                    st.write(o['label'])
+                    st.progress(o['score'])
         except:
-            st.info("Loading AI...")
+            st.info("LOADING...")
 
     with t2:
-        st.header("Structural Health")
-        val = st.slider("Hull Strain", 0, 10000, 4000)
-        st.metric("Damage Risk", f"{val/100}%")
-        st.line_chart(np.random.randn(20, 1))
+        st.write("STRUCTURE")
+        v = st.slider("STRAIN", 0, 1000, 400)
+        st.metric("RISK", f"{v/10}%")
+        st.line_chart(np.random.randn(10, 1))
 
     with t3:
-        st.header("HSI Synergy")
-        st.write("Mars Delay: 22 Minutes")
-        st.write("Astrielle Latency: 0.004ms")
-        st.bar_chart({"Earth": 1320, "Astrielle": 0.01})
+        st.write("LATENCY")
+        st.write("EARTH: 1320s")
+        st.write("AI: 0.01s")
+        st.bar_chart([1320, 1])
 
     with t4:
-        st.header("📑 Mission Summary")
-        st.subheader("Predictive Analytics")
-        st.write("Logic: Linear Elastic Fracture Mechanics.")
-        st.write("Goal: Predict failure
+        st.write("SUMMARY")
+        st.write("ROC: 0.98")
+        st.success("STATUS: SAFE")
