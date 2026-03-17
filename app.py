@@ -11,7 +11,7 @@ favicon_icon_square = Image.open("astrielle_favicon_square.png")
 
 st.set_page_config(
     layout="wide", 
-    page_title="Astrielle AI | HSI",
+    page_title="ASTRIELLE AI | HSI",
     page_icon=favicon_icon_square, 
     initial_sidebar_state="expanded"
 )
