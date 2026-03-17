@@ -3,14 +3,12 @@ import librosa
 import pandas as pd
 import numpy as np
 from transformers import pipeline
-from PIL import Image # <-- Added this to load your logos!
+from PIL import Image
 
 # --- 1. CONFIGURATION ---
-# Load your new logo images here (make sure the files are in the same folder!)
 sidebar_logo_full = Image.open("astrielle_logo_full.png")
 favicon_icon_square = Image.open("astrielle_favicon_square.png")
 
-# Updated to include your new tab icon
 st.set_page_config(
     layout="wide", 
     page_title="Astrielle AI | HSI",
@@ -22,7 +20,7 @@ st.set_page_config(
 if 'entered' not in st.session_state:
     st.session_state.entered = False
 
-# --- 3. THE SPLASH SCREEN (Restored to your original) ---
+# --- 3. THE SPLASH SCREEN ---
 if not st.session_state.entered:
     st.markdown("""
         <style>
@@ -60,7 +58,6 @@ if not st.session_state.entered:
 # --- 4. THE MAIN DASHBOARD ---
 else:
     with st.sidebar:
-        # --- NEW LOGO ADDED HERE ---
         st.image(sidebar_logo_full, use_container_width=True)
         st.markdown("""
             <div style='text-align: center; color: #4F8BF9; font-size: 20px; font-weight: bold;'>
@@ -73,7 +70,6 @@ else:
             <br>
         """, unsafe_allow_html=True)
         st.divider()
-        # ---------------------------
 
         st.title("🛰️ Command Center")
         if st.button("Log Out / Reset View"):
@@ -84,7 +80,7 @@ else:
         st.write("**Local Latency:** 0.004ms")
         st.write("**Earth Sync:** 22m Delay (Bypassed)")
 
-    # THEME GUARD CSS 
+    # THEME GUARD CSS (UPDATED WITH BLACK SIDEBAR AND UPLOAD AREAS)
     st.markdown("""
         <style>
             .stApp {
@@ -113,6 +109,23 @@ else:
             }
             [data-theme="light"] .footer { background: white; color: black; border-top: 1px solid #ddd; }
             [data-theme="dark"] .footer { background: black; color: white; border-top: 1px solid #333; }
+
+            /* --- NEW: PURE BLACK SIDEBAR --- */
+            [data-testid="stSidebar"] {
+                background-color: #000000 !important;
+            }
+
+            /* --- NEW: BLACK UPLOAD & AUDIO WIDGETS --- */
+            [data-testid="stFileUploadDropzone"] {
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            }
+            [data-testid="stAudioInput"] {
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                border-radius: 8px;
+                padding: 10px;
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -127,11 +140,9 @@ else:
 
         classifier = load_voice_model()
         
-        # Mappings for icons AND full words
         emo_icons = {"ang": "😬", "sad": "😢", "hap": "😊", "neu": "😐", "fea": "😨", "sur": "😲"}
         emo_names = {"ang": "Angry (high stress)", "sad": "Sad", "hap": "Happy", "neu": "Neutral", "fea": "Fear", "sur": "Surprise"}
 
-        # Logic for both Upload and Record
         source = st.file_uploader("Upload Telemetry (.wav)", type="wav")
         rec = st.audio_input("Live Stream")
         
@@ -142,13 +153,10 @@ else:
             results = classifier(speech)
             
             top_emo = results[0]['label'].lower()
-            
-            # Translates "hap" to "Happy"
             full_word = emo_names.get(top_emo, top_emo.upper())
             
             st.subheader(f"AI Detected: {full_word.upper()} {emo_icons.get(top_emo, '🛰️')}")
             
-            # AI Feedback block
             if top_emo in ["ang", "fea"]:
                 st.error("⚠️ AI ALERT: Stress detected. Suggest immediate rest cycle.")
             elif top_emo == "hap":
@@ -156,7 +164,6 @@ else:
             else:
                 st.info("📡 AI STATUS: Crew biomarkers nominal.")
 
-            # Show progress bars with full words
             for r in results:
                 lbl = r['label'].lower()
                 full_lbl = emo_names.get(lbl, lbl.upper())
@@ -193,7 +200,6 @@ else:
             st.write("The AI is tuned for **Zero False Negatives**, ensuring no structural crack or crew health risk goes unnoticed.")
             st.success("Current Autonomous Safety Index: 98.4%")
 
-    # RESTORED YOUR ORIGINAL FOOTER
     st.markdown("""
         <div class="footer">
             © 2026 Astrielle AI | <b>Confidential Mission Telemetry</b> | 
