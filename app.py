@@ -16,6 +16,24 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- 1.5 SEO & META TAGS ---
+# This tells Google exactly what text to show under the link in search results!
+st.markdown("""
+    <style>
+        /* Hidden SEO text for search engine crawlers */
+        .seo-hide { display: none; }
+    </style>
+    <div class="seo-hide">
+        <h1>Astrielle AI - Deep Space Edge Intelligence</h1>
+        <h2>Autonomous Human-Systems Integration for Mars Missions</h2>
+        <p>Astrielle AI provides localized AI diagnostics, vocal biomarker monitoring, and structural health tracking to bypass the 20-minute Mars-Earth communication lag.</p>
+    </div>
+    <meta name="description" content="Astrielle AI: Autonomous Edge Intelligence and Human-Systems Integration for Deep Space Exploration.">
+    <meta name="keywords" content="Astrielle AI, Space Technology, Edge Computing, Human-Systems Integration, Vocal Biomarkers, Mars Mission">
+    <meta name="author" content="Astrielle AI">
+""", unsafe_allow_html=True)
+
+
 # --- 2. SESSION STATE ---
 if 'entered' not in st.session_state:
     st.session_state.entered = False
