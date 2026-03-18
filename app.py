@@ -60,6 +60,24 @@ if not st.session_state.entered:
 
 # --- 4. THE MAIN DASHBOARD ---
 else:
+    # --- GLOBAL DASHBOARD STYLING (BACKGROUND RESTORED) ---
+    st.markdown("""
+        <style>
+            .stApp {
+                background: linear-gradient(rgba(14, 17, 23, 0.7), rgba(14, 17, 23, 0.7)), 
+                            url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
+                background-size: cover;
+                background-attachment: fixed;
+            }
+            .stTabs [data-baseweb="tab-panel"] {
+                background: rgba(30, 30, 30, 0.6);
+                padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px;
+            }
+            [data-testid="stSidebar"] { background-color: rgba(0, 0, 0, 0.9) !important; }
+        </style>
+    """, unsafe_allow_html=True)
+
     with st.sidebar:
         if sidebar_logo_full:
             st.image(sidebar_logo_full, use_container_width=True)
