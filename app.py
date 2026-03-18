@@ -29,17 +29,18 @@ if not st.session_state.entered:
     st.markdown("""
         <style>
             .stApp {
-                background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                /* Lessened the dark fade here so the splash screen is more vibrant */
+                background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
                             url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
                 background-size: cover;
                 display: flex; align-items: center; justify-content: center;
             }
             .landing-card {
                 text-align: center; color: white; padding: 60px;
-                background: rgba(255, 255, 255, 0.05); 
+                background: rgba(0, 0, 0, 0.6); 
                 border-radius: 30px;
                 backdrop-filter: blur(15px); 
-                border: 1px solid rgba(255,255,255,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
             }
             .title-text { font-size: 85px; font-weight: 800; letter-spacing: 12px; margin-bottom: 0px; }
             .subtitle-text { font-size: 22px; color: #00f2ff; letter-spacing: 3px; margin-bottom: 30px; }
@@ -60,19 +61,21 @@ if not st.session_state.entered:
 
 # --- 4. THE MAIN DASHBOARD ---
 else:
-    # --- GLOBAL DASHBOARD STYLING (BACKGROUND RESTORED) ---
+    # --- GLOBAL DASHBOARD STYLING (VIBRANT BACKGROUND) ---
     st.markdown("""
         <style>
             .stApp {
-                background: linear-gradient(rgba(14, 17, 23, 0.7), rgba(14, 17, 23, 0.7)), 
+                /* Changed to 0.15 opacity so 85% of the original image color comes through! */
+                background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), 
                             url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2000');
                 background-size: cover;
                 background-attachment: fixed;
             }
             .stTabs [data-baseweb="tab-panel"] {
-                background: rgba(30, 30, 30, 0.6);
-                padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 20px;
+                /* Made the glass panels slightly darker/blurrier to protect text readability */
+                background: rgba(15, 15, 15, 0.75);
+                padding: 30px; border-radius: 20px; backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2); margin-top: 20px;
             }
             [data-testid="stSidebar"] { background-color: rgba(0, 0, 0, 0.9) !important; }
         </style>
