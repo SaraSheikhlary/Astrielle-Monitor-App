@@ -1,38 +1,43 @@
-# 🌌 Astrielle AI | Autonomous Edge Intelligence
+# 🛰️ ASTRIELLE AI: Autonomous Edge Intelligence
 
-**Advanced Human-Systems Integration (HSI) for Deep Space Exploration.**
+![Mission Status](https://img.shields.io/badge/Mission-Active-success?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.9+-ffd343?style=for-the-badge&logo=python)
 
-Current Mars missions face a **22-minute delay** for signals to reach Earth. In a mission-critical emergency, waiting 44 minutes for a round-trip response from ground control is not an option. 
+**Astrielle AI** is a specialized Human-Systems Integration (HSI) monitor designed for deep space exploration. By deploying localized AI at the "Edge," it bypasses the critical 22-minute communication latency between Mars and Earth, providing crew members with real-time psychological and structural safety metrics.
 
-**Astrielle AI** solves this by moving intelligence to the *Edge*. By analyzing structural telemetry and crew vocal biomarkers locally on the spacecraft, Astrielle predicts and prevents mission failure in milliseconds, completely bypassing the Earth-Mars communication lag.
+## 🧠 Core Capabilities
+
+### 🎙️ Vocal Biomarker Analysis
+Utilizes the `Wav2Vec2-Base-Superb-ER` transformer model to analyze crew speech patterns in real-time. The system detects:
+* **Emotional States:** Stress, Anxiety, and Fatigue.
+* **Cohesion Metrics:** Interpersonal friction and communication breakdowns.
+* **Autonomous Intervention:** Recommends mandatory rest cycles or system lockouts during high-stress events.
+
+### 🏗️ Structural Health Monitoring
+Predictive analysis of habitat integrity using simulated telemetry:
+* Real-time vibration and strain monitoring.
+* Automated deformation risk assessment.
+
+### 🚀 Edge-First Architecture
+Designed to operate independently of Earth-based Mission Control.
+* **Latency:** < 0.004ms (Local) vs. 1,320,000ms (Earth-Mars Roundtrip).
+* **Privacy:** All biometric data processed locally at the habitat edge.
+
+## 🛠️ Tech Stack
+* **Frontend:** Streamlit (Custom Glassmorphism UI)
+* **AI/ML:** HuggingFace Transformers, Librosa (Audio Processing)
+* **Data:** NumPy, Pandas
+* **DevOps:** GitHub Actions, DevContainers, PyCharm Integration
+
+## 📂 Project Structure
+* `app.py`: Main dashboard logic and UI.
+* `requirements.txt`: Environment dependencies.
+* `assets/`: Mission logos and high-resolution galaxy UI elements.
+* `.idea/`: PyCharm development metadata.
+
+## ⚖️ License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-## ✨ Features
-
-* **🎙️ Vocal Biomarker Monitor:** Utilizes a state-of-the-art Wav2Vec2 AI model to analyze crew voice telemetry (via `.wav` upload or live microphone). It detects psychological states (Stress, Fear, Morale) to ensure optimal human performance.
-* **🛰️ Structural Health Monitoring:** Real-time predictive analytics tracking hull vibration and strain to calculate structural deformation risks before microscopic cracks become catastrophic failures.
-* **🧠 HSI Synergy Dashboards:** Live comparisons of edge-computing latency (0.004ms) versus Earth-Sync delays (22m), proving the necessity of autonomous localized AI.
-* **📑 Mission Intelligence Summary:** High-level metrics, including the current Autonomous Safety Index and system reliability scores (ROC-AUC).
-
----
-
-## 🛠️ Technology Stack
-
-* **Frontend & Framework:** [Streamlit](https://streamlit.io/)
-* **Audio Processing:** [Librosa](https://librosa.org/)
-* **Machine Learning / AI:** [Hugging Face Transformers](https://huggingface.co/docs/transformers/index) (`pipeline`)
-* **AI Model:** `superb/wav2vec2-base-superb-er` (Emotion Recognition)
-* **Data Handling:** Pandas, NumPy
-
----
-
-## 🚀 Installation & Setup
-
-**1. Clone the repository or download the files:**
-Ensure `app.py` is in your working directory.
-
-**2. Install the required Python dependencies:**
-You will need to install the core libraries and PyTorch (required for Hugging Face models).
-```bash
-pip install streamlit librosa pandas numpy transformers torch torchaudio
+*Developed for the future of deep space HSI | © 2026 Astrielle AI*
