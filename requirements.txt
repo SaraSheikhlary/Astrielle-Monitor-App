@@ -1,6 +1,7 @@
 streamlit
 librosa
-transformers==4.44.2
-torch --index-url https://download.pytorch.org/whl/cpu
+transformers
+torch
 pandas
 numpy
+Pillow
